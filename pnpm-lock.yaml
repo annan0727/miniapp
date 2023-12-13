@@ -48,11 +48,11 @@ dependencies:
     specifier: ^1.4.28
     version: 1.4.28
   pinia:
-    specifier: ^2.1.7
-    version: 2.1.7(typescript@4.9.5)(vue@3.3.11)
+    specifier: ^2.0.27
+    version: 2.0.27(typescript@4.9.5)(vue@3.3.11)
   pinia-plugin-persistedstate:
     specifier: ^3.2.0
-    version: 3.2.0(pinia@2.1.7)
+    version: 3.2.0(pinia@2.0.27)
   vue:
     specifier: ^3.2.45
     version: 3.3.11(typescript@4.9.5)
@@ -6335,20 +6335,20 @@ packages:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==, tarball: https://registry.npmmirror.com/pify/-/pify-2.3.0.tgz}
     engines: {node: '>=0.10.0'}
 
-  /pinia-plugin-persistedstate@3.2.0(pinia@2.1.7):
+  /pinia-plugin-persistedstate@3.2.0(pinia@2.0.27):
     resolution: {integrity: sha512-tZbNGf2vjAQcIm7alK40sE51Qu/m9oWr+rEgNm/2AWr1huFxj72CjvpQcIQzMknDBJEkQznCLAGtJTIcLKrKdw==, tarball: https://registry.npmmirror.com/pinia-plugin-persistedstate/-/pinia-plugin-persistedstate-3.2.0.tgz}
     peerDependencies:
       pinia: ^2.0.0
     dependencies:
-      pinia: 2.1.7(typescript@4.9.5)(vue@3.3.11)
+      pinia: 2.0.27(typescript@4.9.5)(vue@3.3.11)
     dev: false
 
-  /pinia@2.1.7(typescript@4.9.5)(vue@3.3.11):
-    resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==, tarball: https://registry.npmmirror.com/pinia/-/pinia-2.1.7.tgz}
+  /pinia@2.0.27(typescript@4.9.5)(vue@3.3.11):
+    resolution: {integrity: sha512-nOnXP0OFeL8R4WjAHsterU+11vptda643gH02xKNtSCDPiRzVfRYodOLihLDoa0gL1KKuQKV+KOzEgdt3YvqEw==, tarball: https://registry.npmmirror.com/pinia/-/pinia-2.0.27.tgz}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
-      vue: ^2.6.14 || ^3.3.0
+      vue: ^2.6.14 || ^3.2.0
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
