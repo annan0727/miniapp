@@ -36,8 +36,7 @@
     "build:quickapp-webview": "uni build -p quickapp-webview",
     "build:quickapp-webview-huawei": "uni build -p quickapp-webview-huawei",
     "build:quickapp-webview-union": "uni build -p quickapp-webview-union",
-    "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore"
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-3081220230817001",
@@ -58,8 +57,7 @@
     "pinia-plugin-persistedstate": "^3.2.0",
     "pnpm": "^8.12.1",
     "vue": "^3.2.45",
-    "vue-i18n": "^9.1.9",
-    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore"
+    "vue-i18n": "^9.1.9"
   },
   "devDependencies": {
     "@dcloudio/types": "^3.3.2",
