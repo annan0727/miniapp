@@ -41,7 +41,7 @@
 	],
 	"tabBar": {
 		"color": "#3c3c3c",
-		"selectedColor":"A1D5BA",
+		"selectedColor": "A1D5BA",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [
@@ -69,14 +69,27 @@
 				"iconPath": "static/images/tabbar/user.png",
 				"selectedIconPath": "static/images/tabbar/user_checked.png"
 			}
-			
 		]
 	},
-
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
-	}
+	},
+	"subPackages": [
+		{
+			"root": "pagesMember",
+			"pages": [
+				{
+					"path": "profile",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "个人信息"
+					}
+				}
+			]
+		}
+	]
 }

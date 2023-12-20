@@ -8,7 +8,7 @@
 import { useMemberStore } from '@/stores/modules/member'
 
 // 请求基地址
-const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
+const baseURL = 'https://xxxxxxx'
 
 // 请求拦截配置
 const httpInterceptor = {
