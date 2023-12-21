@@ -35,6 +35,8 @@
 		{
 			"path": "pages/user/user",
 			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "我的"
 			}
 		}

@@ -6,9 +6,10 @@
  */
 
 import { useMemberStore } from '@/stores/modules/member'
+import { autoLogin } from './autoLogin'
 
 // 请求基地址
-const baseURL = 'https://xxxxxxx'
+const baseURL = 'http://212.129.221.204:9100'
 
 // 请求拦截配置
 const httpInterceptor = {
@@ -22,10 +23,10 @@ const httpInterceptor = {
     // 2、设置超时时间 10s
     options.timeout = 10000
 
-    // 3、添加小程序端请求头标识
+    // 3、是否需要 添加小程序端请求头标识
     options.header = {
       ...options.header,
-      'source-client': 'miniapp', // 为不同的端 添加标识
+      // 'source-client': 'miniapp', // 为不同的端 添加标识
     }
 
     // 4、添加token 请求头标识 登录后才会有
@@ -33,7 +34,7 @@ const httpInterceptor = {
     const token = memberStore.profile?.token // 获取用户token
     if (token) {
       // 设置请求头 token
-      options.header.Authorization = token
+      options.header.Authorization = "Bearer " + token
     }
   },
 }
@@ -72,16 +73,20 @@ export const http = <T>(options: UniApp.RequestOptions) => {
     uni.request({
       ...options,
       // 响应成功
-      success(res) {
+      async success(res) {
         // 状态码2xx，参考axios的设计
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // 2.1 提取核心数据 res.data
           resolve(res.data as ResponseData<T>)
         } else if (res.statusCode === 401) {
-          //401错误 用户token失效 清理用户信息 跳转登录页
+          //401错误 用户token失效 清理用户信息 重新自动登录 刷新页面
           const memberStore = useMemberStore()
           memberStore.clearProfile()
-          uni.navigateTo({ url: '/pages/login/login' })
+          await autoLogin();
+          uni.showToast({
+            icon: 'none',
+            title: '网络卡顿，请重试！',
+          })
           // 错误终止
           reject(res)
         } else {

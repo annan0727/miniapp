@@ -1,32 +1,30 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import { useMemberStore } from './stores/modules/member'
-import { http } from '@/utils/http'
-import { userLogin } from '@/api/login'
+import { autoLogin } from '@/utils/autoLogin'
 const memberStore = useMemberStore()
-// 验证token是否过期，重新获取用户信息（包括token）
-// const checkToken = () => {
-//   http
-// }
 
 onLaunch(async () => {
-  // 1、先从store中取出token做判断用
+  // 从store中取出token做判断用
   const token: string | undefined = memberStore.profile?.token
-  if (!token) {
-    // 2、如果没有token 去登录
-    // login()
-  }
+  // 检查session 是否过期
+  wx.checkSession({
+    success: async () => {
+      // 未过期
+      console.log('未过期')
+      // 3、没有token 或者 session过期 去登录
+      if (!token) {
+        await autoLogin()
+      }
+    },
+    fail: async () => {
+      // 过期 去登录
+      console.log('过期')
+      await autoLogin()
+    }
+  })
 })
 
-// 2、静默登录
-const login = async () => {
-  // 获取唯一code码
-  const code: string = (await wx.login()).code
-  console.log('code', code)
-  // 发起静默登录请求
-  const res = await userLogin({ code })
-  console.log('res', res)
-}
 onShow(() => {
   console.log('App Show')
 })
@@ -35,8 +33,7 @@ onHide(() => {
 })
 </script>
 <style lang="scss">
-// 字体图标
-@import '@/styles/fonts.scss';
+@import './uni.scss';
 
 view,
 navigator,

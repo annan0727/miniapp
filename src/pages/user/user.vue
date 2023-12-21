@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useMemberStore } from '@/stores'
+import { autoLogin } from '@/utils/autoLogin';
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -13,13 +14,41 @@ const defaultAvatar = ref<string>('')
 // 微信用户默认昵称
 const defaultNickname = ref<string>('')
 
-onLoad(() => {
+// 帖子项：我的帖子 我的评论 我的赞藏 我的关注
+const postCateList = ref<any>([
+  {
+    text: '我的帖子',
+    num: 0,
+    path: '/pages/post/myPost',
+  },
+  {
+    text: '我的评论',
+    num: 0,
+    path: '/pages/post/myComment',
+  },
+  // {
+  //   text: '我的赞藏',
+  //   num: 0,
+  //   path: '/pages/post/myLike',
+  // },
+  {
+    text: '我的关注',
+    num: 0,
+    path: '/pages/post/myFollow',
+  },
+])
+onLoad(async () => {
+  console.log('memberStore', memberStore);
+
   // 获取微信用户默认头像昵称
   wx.getUserInfo({
     desc: '用于获取微信用户头像昵称',
     success: (res) => {
       defaultAvatar.value = res.userInfo.avatarUrl
       defaultNickname.value = res.userInfo.nickName
+      if (!memberStore.profile?.picPath) {
+        memberStore.profile!.picPath = defaultAvatar.value
+      }
     },
   })
 })
@@ -32,27 +61,34 @@ onLoad(() => {
       <!-- 默认显示默认的昵称和头像 -->
       <view class="overview">
         <navigator url="/pagesMember/profile" hover-class="none">
-          <image
-            class="avatar"
-            mode="aspectFill"
-            :src="memberStore.profile?.picPath || defaultAvatar"
-          ></image>
+          <image class="avatar" mode="aspectFill" :src="memberStore.profile?.picPath || defaultAvatar"></image>
         </navigator>
         <view class="meta">
           <view class="nickname"> {{ memberStore.profile?.nickName || defaultNickname }} </view>
-          <navigator class="extra" url="/pagesMember/profile" hover-class="none">
-            <text class="update">更新头像昵称</text>
-          </navigator>
+          <!-- <navigator class="extra" url="/pagesMember/profile" hover-class="none"> -->
+          <text class="company">强友之家已经陪伴您10天了~</text>
+          <!-- </navigator> -->
         </view>
       </view>
-      <navigator class="settings" url="/pagesMember/settings/settings" hover-class="none">
-        编辑
+      <navigator class="settings" url="/pagesMember/profile" hover-class="none">
+        <uni-icons type="compose" size="24" color="#3d3d3d"></uni-icons>
+      </navigator>
+    </view>
+    <!-- 帖子信息 -->
+    <view class="postinfo">
+      <!-- 我的帖子 -->
+      <navigator class="post-item" url="/pagesMember/profile" hover-class="none" v-for="item in postCateList"
+        :key="item.text">
+        <text class="num">{{ item.num }}</text>
+        <view class="text">{{ item.text }}</view>
       </navigator>
     </view>
   </scroll-view>
 </template>
 
 <style lang="scss">
+$ashome-color-base: #a1d5ba;
+
 page {
   height: 100%;
   overflow: hidden;
@@ -75,7 +111,7 @@ page {
     display: flex;
     height: 120rpx;
     padding: 0 36rpx;
-    color: #fff;
+    color: #3d3d3d;
   }
 
   .avatar {
@@ -103,35 +139,58 @@ page {
     max-width: 350rpx;
     margin-bottom: 16rpx;
     font-size: 30rpx;
+    font-weight: bold;
 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .extra {
-    display: flex;
-    font-size: 20rpx;
-  }
 
   .tips {
     font-size: 22rpx;
   }
 
-  .update {
-    padding: 3rpx 10rpx 1rpx;
-    color: rgba(255, 255, 255, 0.8);
-    border: 1rpx solid rgba(255, 255, 255, 0.8);
-    margin-right: 10rpx;
-    border-radius: 30rpx;
+  .company {
+    font-size: 24rpx;
+    padding: 3rpx 0rpx 1rpx;
   }
 
   .settings {
+    // font-size: 20rpx;
     position: absolute;
-    bottom: 0;
+    bottom: 40rpx;
     right: 40rpx;
-    font-size: 30rpx;
-    color: #fff;
+    color: #3d3d3d;
+  }
+}
+
+.postinfo {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  // width: 80%;
+  height: 140rpx;
+  background-color: #fff;
+  margin: 20rpx 36rpx;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 6rpx 18rpx 0rpx rgba(0, 0, 0, 0.3);
+
+  .post-item {
+    font-size: 26rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .num {
+      color: $ashome-color-base;
+    }
+
+    .text {
+      margin-top: 20rpx;
+    }
+
   }
 }
 
@@ -163,17 +222,20 @@ page {
     display: flex;
     justify-content: space-between;
     padding: 40rpx 20rpx 10rpx;
+
     .navigator,
     .contact {
       text-align: center;
       font-size: 24rpx;
       color: #333;
+
       &::before {
         display: block;
         font-size: 60rpx;
         color: #ff9545;
       }
     }
+
     .contact {
       padding: 0;
       margin: 0;

@@ -1,6 +1,28 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import type { ProfileInfo } from '@/types/member'
+import { getUserInfo } from '@/api/profile'
+import { useMemberStore } from '@/stores'
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
+
+const profileInfo = ref<ProfileInfo>()
+const memberStore = useMemberStore()
+onLoad(async () => {
+  const res = await getUserInfo()
+  if (res.code === "200") {
+    profileInfo.value = res.data
+  }
+})
+
+// 选择头像
+const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
+  console.log('profileInfo.value', profileInfo.value);
+
+  profileInfo.value!.picPath = e.detail?.avatarUrl
+}
+
 </script>
 
 <template>
@@ -13,7 +35,9 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
     <!-- 头像 -->
     <view class="avatar">
       <view class="avatar-content">
-        <image class="image" src=" " mode="aspectFill" />
+        <button class="avatar-wrapper" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
+          <image class="image" :src="profileInfo?.picPath || memberStore.profile?.picPath" mode="aspectFill" />
+        </button>
         <text class="text">点击修改头像</text>
       </view>
     </view>
@@ -21,10 +45,10 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
     <view class="form">
       <!-- 表单内容 -->
       <view class="form-content">
-        <view class="form-item">
+        <!-- <view class="form-item">
           <text class="label">账号</text>
           <text class="account">账号名</text>
-        </view>
+        </view> -->
         <view class="form-item">
           <text class="label">昵称</text>
           <input class="input" type="text" placeholder="请填写昵称" value="" />
@@ -33,24 +57,26 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
           <text class="label">性别</text>
           <radio-group>
             <label class="radio">
-              <radio value="男" color="#27ba9b" :checked="true" />
+              <radio value="男" color="#a1d5ba" :checked="true" />
               男
             </label>
             <label class="radio">
-              <radio value="女" color="#27ba9b" :checked="false" />
+              <radio value="女" color="#a1d5ba" :checked="false" />
               女
             </label>
           </radio-group>
         </view>
         <view class="form-item">
+          <text class="label">邮箱</text>
+          <input class="input" type="text" placeholder="请填写邮箱" value="" />
+        </view>
+        <view class="form-item">
+          <text class="label">手机号</text>
+          <input class="input" type="tel" placeholder="请填写手机号" value="" />
+        </view>
+        <view class="form-item">
           <text class="label">生日</text>
-          <picker
-            class="picker"
-            mode="date"
-            start="1900-01-01"
-            :end="new Date()"
-            value="2000-01-01"
-          >
+          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" value="2000-01-01">
             <view v-if="false">2000-01-01</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
@@ -124,6 +150,12 @@ page {
   justify-content: center;
   align-items: center;
 
+  .avatar-content {
+    .avatar-wrapper {
+      background-color: transparent !important;
+    }
+  }
+
   .image {
     width: 160rpx;
     height: 160rpx;
@@ -186,6 +218,7 @@ page {
     .picker {
       flex: 1;
     }
+
     .placeholder {
       color: #808080;
     }
@@ -199,7 +232,7 @@ page {
     color: #fff;
     border-radius: 80rpx;
     font-size: 30rpx;
-    background-color: #27ba9b;
+    background-color: #a1d5ba;
   }
 }
 </style>
