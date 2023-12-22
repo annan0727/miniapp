@@ -1,26 +1,65 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import type { ProfileInfo } from '@/types/member'
-import { getUserInfo } from '@/api/profile'
+import type { UpdateUserParams } from '@/types/member'
+import { getUserInfo, updateUser } from '@/api/profile'
 import { useMemberStore } from '@/stores'
+import { autoLogin } from '@/utils/autoLogin'
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
-
-const profileInfo = ref<ProfileInfo>()
+// 本地存储的用户信息
 const memberStore = useMemberStore()
+
+// 编辑用户信息
+const profileInfo = ref<UpdateUserParams>({
+  userCode: "",
+  nickName: "",
+  userMail: "",
+  userPhone: "",
+  userRemark: "",
+  sex: 0,
+  birthDate: "",
+  picPath: "",
+})
+
 onLoad(async () => {
+  await queryUserInfo()
+})
+
+// 获取用户信息
+const queryUserInfo = async () => {
   const res = await getUserInfo()
   if (res.code === "200") {
     profileInfo.value = res.data
   }
-})
+}
 
 // 选择头像
-const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
-  console.log('profileInfo.value', profileInfo.value);
+const onChooseAvatar: UniHelper.ButtonOnChooseavatar = (e) => {
+  profileInfo.value.picPath = e.detail?.avatarUrl
+}
 
-  profileInfo.value!.picPath = e.detail?.avatarUrl
+// 日期选择
+const bindDateChange: UniHelper.DatePickerOnChange = (e) => {
+  profileInfo.value.birthDate = e.detail?.value
+}
+
+// 修改性别
+const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
+  profileInfo.value.sex = ev.detail.value === '男' ? 0 : 1
+}
+
+// 编辑用户信息-保存
+const editProfileInfo = async () => {
+  console.log(profileInfo.value);
+  const res = await updateUser(profileInfo.value)
+  if (res.code === "200") {
+    await autoLogin()
+    uni.showToast({ icon: 'success', title: '保存成功' })
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 400)
+  }
 }
 
 </script>
@@ -29,14 +68,16 @@ const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
   <view class="viewport">
     <!-- 导航栏 -->
     <view class="navbar" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
-      <navigator open-type="navigateBack" class="back icon-left" hover-class="none"></navigator>
+      <navigator open-type="navigateBack" class="back" hover-class="none">
+        <uni-icons type="left" size="20" color="#fff"></uni-icons>
+      </navigator>
       <view class="title">个人信息</view>
     </view>
     <!-- 头像 -->
     <view class="avatar">
       <view class="avatar-content">
         <button class="avatar-wrapper" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
-          <image class="image" :src="profileInfo?.picPath || memberStore.profile?.picPath" mode="aspectFill" />
+          <image class="image" :src="profileInfo.picPath || memberStore.profile?.picPath" mode="aspectFill" />
         </button>
         <text class="text">点击修改头像</text>
       </view>
@@ -51,11 +92,11 @@ const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
         </view> -->
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" value="" />
+          <input class="input" type="text" placeholder="请填写昵称" v-model="profileInfo.nickName" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
-          <radio-group>
+          <radio-group @change="onGenderChange">
             <label class="radio">
               <radio value="男" color="#a1d5ba" :checked="true" />
               男
@@ -68,20 +109,28 @@ const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
         </view>
         <view class="form-item">
           <text class="label">邮箱</text>
-          <input class="input" type="text" placeholder="请填写邮箱" value="" />
+          <input class="input" type="text" placeholder="请填写邮箱" v-model="profileInfo.userMail" />
         </view>
-        <view class="form-item">
+        <!-- <view class="form-item">
           <text class="label">手机号</text>
-          <input class="input" type="tel" placeholder="请填写手机号" value="" />
-        </view>
+          <input class="input" type="tel" placeholder="请填写手机号" :value="" />
+        </view> -->
         <view class="form-item">
           <text class="label">生日</text>
-          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" value="2000-01-01">
-            <view v-if="false">2000-01-01</view>
+          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" :value="profileInfo.birthDate"
+            @change="bindDateChange">
+            <view v-if="profileInfo.birthDate">{{ profileInfo?.birthDate }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
         </view>
-        <view class="form-item">
+        <view class="form-item" style="height:auto">
+          <text class="label">备注</text>
+          <!-- <input class="input" type="text" placeholder="请填写备注" :value="profileInfo?.userRemark" /> -->
+          <textarea class="input" v-model="profileInfo.userRemark" placeholder="请填写备注" auto-height>
+
+          </textarea>
+        </view>
+        <!-- <view class="form-item">
           <text class="label">城市</text>
           <picker class="picker" mode="region" :value="['广东省', '广州市', '天河区']">
             <view v-if="false">广东省广州市天河区</view>
@@ -91,10 +140,10 @@ const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
         <view class="form-item">
           <text class="label">职业</text>
           <input class="input" type="text" placeholder="请填写职业" value="" />
-        </view>
+        </view> -->
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button @tap="editProfileInfo" class="form-button">保 存</button>
     </view>
   </view>
 </template>

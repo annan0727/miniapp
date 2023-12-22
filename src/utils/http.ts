@@ -75,19 +75,43 @@ export const http = <T>(options: UniApp.RequestOptions) => {
       // 响应成功
       async success(res) {
         // 状态码2xx，参考axios的设计
-        if (res.statusCode >= 200 && res.statusCode < 300) {
+        if (res.statusCode >= 200 && res.statusCode < 404) {
+          const code = (res.data as ResponseData<T>).code
           // 2.1 提取核心数据 res.data
-          resolve(res.data as ResponseData<T>)
-        } else if (res.statusCode === 401) {
-          //401错误 用户token失效 清理用户信息 重新自动登录 刷新页面
-          const memberStore = useMemberStore()
-          memberStore.clearProfile()
-          await autoLogin();
+          if (code === "200") {
+            resolve(res.data as ResponseData<T>)
+          } else if (code === "400") {
+            // 400错误 常规业务提醒，如文件过大，字符长度过大等
+            uni.showToast({
+              icon: 'none',
+              title: (res.data as ResponseData<T>).msg || '请求错误',
+            })
+            reject(res)
+          } else if (code === "401") {
+            // 401错误 用户token失效 清理用户信息 重新自动登录
+            const memberStore = useMemberStore()
+            memberStore.clearProfile()
+            await autoLogin();
+            uni.showToast({
+              icon: 'none',
+              title: '网络卡顿，请重试！',
+            })
+            reject(res)
+          } else {
+            // 其他错误
+            uni.showToast({
+              icon: 'none',
+              title: (res.data as ResponseData<T>).msg || '请求错误',
+            })
+            reject(res)
+          }
+
+        } else if (res.statusCode === 404) {
           uni.showToast({
             icon: 'none',
-            title: '网络卡顿，请重试！',
+            title: '糟糕！页面找不到了~'
           })
-          // 错误终止
+          uni.reLaunch({ url: '/pages/index/index' })
           reject(res)
         } else {
           // 其它错误 -> 根据后端错误信息轻提示

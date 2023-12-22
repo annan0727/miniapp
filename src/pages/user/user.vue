@@ -38,7 +38,6 @@ const postCateList = ref<any>([
   },
 ])
 onLoad(async () => {
-  console.log('memberStore', memberStore);
 
   // 获取微信用户默认头像昵称
   wx.getUserInfo({
@@ -48,6 +47,8 @@ onLoad(async () => {
       defaultNickname.value = res.userInfo.nickName
       if (!memberStore.profile?.picPath) {
         memberStore.profile!.picPath = defaultAvatar.value
+        console.log('memberStore', memberStore);
+
       }
     },
   })
@@ -159,7 +160,7 @@ page {
   .settings {
     // font-size: 20rpx;
     position: absolute;
-    bottom: 40rpx;
+    bottom: 0rpx;
     right: 40rpx;
     color: #3d3d3d;
   }
