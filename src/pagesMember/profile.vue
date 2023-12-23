@@ -12,14 +12,14 @@ const memberStore = useMemberStore()
 
 // 编辑用户信息
 const profileInfo = ref<UpdateUserParams>({
-  userCode: "",
-  nickName: "",
-  userMail: "",
-  userPhone: "",
-  userRemark: "",
+  userCode: '',
+  nickName: '',
+  userMail: '',
+  userPhone: '',
+  userRemark: '',
   sex: 0,
-  birthDate: "",
-  picPath: "",
+  birthDate: '',
+  picPath: '',
 })
 
 onLoad(async () => {
@@ -29,7 +29,7 @@ onLoad(async () => {
 // 获取用户信息
 const queryUserInfo = async () => {
   const res = await getUserInfo()
-  if (res.code === "200") {
+  if (res.code === '200') {
     profileInfo.value = res.data
   }
 }
@@ -51,9 +51,9 @@ const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
 
 // 编辑用户信息-保存
 const editProfileInfo = async () => {
-  console.log(profileInfo.value);
+  console.log(profileInfo.value)
   const res = await updateUser(profileInfo.value)
-  if (res.code === "200") {
+  if (res.code === '200') {
     await autoLogin()
     uni.showToast({ icon: 'success', title: '保存成功' })
     setTimeout(() => {
@@ -61,7 +61,6 @@ const editProfileInfo = async () => {
     }, 400)
   }
 }
-
 </script>
 
 <template>
@@ -77,7 +76,11 @@ const editProfileInfo = async () => {
     <view class="avatar">
       <view class="avatar-content">
         <button class="avatar-wrapper" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
-          <image class="image" :src="profileInfo.picPath || memberStore.profile?.picPath" mode="aspectFill" />
+          <image
+            class="image"
+            :src="profileInfo.picPath || memberStore.profile?.picPath"
+            mode="aspectFill"
+          />
         </button>
         <text class="text">点击修改头像</text>
       </view>
@@ -92,7 +95,12 @@ const editProfileInfo = async () => {
         </view> -->
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" v-model="profileInfo.nickName" />
+          <input
+            class="input"
+            type="text"
+            placeholder="请填写昵称"
+            v-model="profileInfo.nickName"
+          />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
@@ -109,7 +117,12 @@ const editProfileInfo = async () => {
         </view>
         <view class="form-item">
           <text class="label">邮箱</text>
-          <input class="input" type="text" placeholder="请填写邮箱" v-model="profileInfo.userMail" />
+          <input
+            class="input"
+            type="text"
+            placeholder="请填写邮箱"
+            v-model="profileInfo.userMail"
+          />
         </view>
         <!-- <view class="form-item">
           <text class="label">手机号</text>
@@ -117,17 +130,22 @@ const editProfileInfo = async () => {
         </view> -->
         <view class="form-item">
           <text class="label">生日</text>
-          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" :value="profileInfo.birthDate"
-            @change="bindDateChange">
+          <picker
+            class="picker"
+            mode="date"
+            start="1900-01-01"
+            :end="new Date()"
+            :value="profileInfo.birthDate"
+            @change="bindDateChange"
+          >
             <view v-if="profileInfo.birthDate">{{ profileInfo?.birthDate }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
         </view>
-        <view class="form-item" style="height:auto">
+        <view class="form-item" style="height: auto">
           <text class="label">备注</text>
           <!-- <input class="input" type="text" placeholder="请填写备注" :value="profileInfo?.userRemark" /> -->
-          <textarea class="input" v-model="profileInfo.userRemark" placeholder="请填写备注" auto-height>
-
+          <textarea class="textarea" v-model="profileInfo.userRemark" placeholder="请填写备注">
           </textarea>
         </view>
         <!-- <view class="form-item">
@@ -258,6 +276,11 @@ page {
       flex: 1;
       display: block;
       height: 46rpx;
+    }
+    .textarea {
+      flex: 1;
+      display: block;
+      max-height: 100rpx;
     }
 
     .radio {

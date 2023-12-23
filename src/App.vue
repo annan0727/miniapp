@@ -21,7 +21,7 @@ onLaunch(async () => {
       // 过期 去登录
       console.log('过期')
       await autoLogin()
-    }
+    },
   })
 })
 
@@ -34,6 +34,7 @@ onHide(() => {
 </script>
 <style lang="scss">
 @import './uni.scss';
+@import './static/iconfont.scss';
 
 view,
 navigator,

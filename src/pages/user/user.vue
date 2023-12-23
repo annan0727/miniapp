@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useMemberStore } from '@/stores'
-import { autoLogin } from '@/utils/autoLogin';
+import { autoLogin } from '@/utils/autoLogin'
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -26,11 +26,11 @@ const postCateList = ref<any>([
     num: 0,
     path: '/pages/post/myComment',
   },
-  // {
-  //   text: '我的赞藏',
-  //   num: 0,
-  //   path: '/pages/post/myLike',
-  // },
+  {
+    text: '我的收藏',
+    num: 0,
+    path: '/pages/post/myLike',
+  },
   {
     text: '我的关注',
     num: 0,
@@ -38,7 +38,7 @@ const postCateList = ref<any>([
   },
 ])
 onLoad(async () => {
-
+  console.log('memberStore', memberStore)
   // 获取微信用户默认头像昵称
   wx.getUserInfo({
     desc: '用于获取微信用户头像昵称',
@@ -47,8 +47,6 @@ onLoad(async () => {
       defaultNickname.value = res.userInfo.nickName
       if (!memberStore.profile?.picPath) {
         memberStore.profile!.picPath = defaultAvatar.value
-        console.log('memberStore', memberStore);
-
       }
     },
   })
@@ -62,7 +60,11 @@ onLoad(async () => {
       <!-- 默认显示默认的昵称和头像 -->
       <view class="overview">
         <navigator url="/pagesMember/profile" hover-class="none">
-          <image class="avatar" mode="aspectFill" :src="memberStore.profile?.picPath || defaultAvatar"></image>
+          <image
+            class="avatar"
+            mode="aspectFill"
+            :src="memberStore.profile?.picPath || defaultAvatar"
+          ></image>
         </navigator>
         <view class="meta">
           <view class="nickname"> {{ memberStore.profile?.nickName || defaultNickname }} </view>
@@ -71,18 +73,85 @@ onLoad(async () => {
           <!-- </navigator> -->
         </view>
       </view>
-      <navigator class="settings" url="/pagesMember/profile" hover-class="none">
-        <uni-icons type="compose" size="24" color="#3d3d3d"></uni-icons>
+      <navigator class="settings icon-a-44tubiao-17" url="/pagesMember/profile" hover-class="none">
       </navigator>
     </view>
     <!-- 帖子信息 -->
     <view class="postinfo">
       <!-- 我的帖子 -->
-      <navigator class="post-item" url="/pagesMember/profile" hover-class="none" v-for="item in postCateList"
-        :key="item.text">
+      <navigator
+        class="post-item"
+        url="/pagesMember/profile"
+        hover-class="none"
+        v-for="item in postCateList"
+        :key="item.text"
+      >
         <text class="num">{{ item.num }}</text>
         <view class="text">{{ item.text }}</view>
       </navigator>
+    </view>
+    <!-- 绑定手机号 -->
+    <view class="loginphone">
+      <view class="left-text">
+        <!-- <image class="tip" src="../../static/images//user/tip.png"></image> -->
+        <text class="tip icon-a-44tubiao-62"></text>
+        <text> 绑定手机号，同步自己的个人纪录哦！ </text>
+      </view>
+      <navigator url="/pagesMember/bindPhone" class="bind-phone" hover-class="none">
+        <button hover-class="button-hover" size="mini" class="btn">登录/注册</button>
+      </navigator>
+    </view>
+    <!-- 底部功能列表 -->
+    <view class="functions">
+      <button hover-class="none" class="item" open-type="openSetting">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-133"></text>
+          <text>授权管理</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
+      <button hover-class="none" class="item" open-type="feedback">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-149"></text>
+          <text>问题反馈</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
+      <button hover-class="none" class="item" open-type="contact">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-131"></text>
+          <text>联系我们</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
+      <button hover-class="none" class="item" open-type="contactShare">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-121"></text>
+          <text>分享我们</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
+      <button hover-class="none" class="item">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-147"></text>
+          <text>关于我们</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
+      <button hover-class="none" class="item">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-57"></text>
+          <text>修改手机</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
+      <button hover-class="none" class="item">
+        <text class="icon-text">
+          <text class="icons icon-a-44tubiao-47"></text>
+          <text>系统设置</text>
+        </text>
+        <uni-icons type="right" size="24" color="#e0e0e0"></uni-icons>
+      </button>
     </view>
   </scroll-view>
 </template>
@@ -105,7 +174,7 @@ page {
 
 /* 用户信息 */
 .profile {
-  margin-top: 20rpx;
+  margin-top: 60rpx;
   position: relative;
 
   .overview {
@@ -147,9 +216,8 @@ page {
     white-space: nowrap;
   }
 
-
   .tips {
-    font-size: 22rpx;
+    font-size: 30rpx;
   }
 
   .company {
@@ -158,11 +226,12 @@ page {
   }
 
   .settings {
-    // font-size: 20rpx;
+    font-size: 34rpx;
     position: absolute;
     bottom: 0rpx;
     right: 40rpx;
     color: #3d3d3d;
+    font-weight: bold;
   }
 }
 
@@ -171,27 +240,104 @@ page {
   justify-content: space-around;
   align-items: center;
   // width: 80%;
-  height: 140rpx;
+  height: 160rpx;
   background-color: #fff;
   margin: 20rpx 36rpx;
+  margin-top: 30rpx;
   border-radius: 20rpx;
   box-shadow: 0rpx 6rpx 18rpx 0rpx rgba(0, 0, 0, 0.3);
 
   .post-item {
-    font-size: 26rpx;
+    font-size: 24rpx;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
     .num {
+      font-size: 26rpx;
+      font-weight: bold;
       color: $ashome-color-base;
     }
 
     .text {
       margin-top: 20rpx;
     }
+  }
+}
+/* 列表 */
+.functions {
+  padding: 0 20rpx;
+  background-color: #fff;
+  margin-bottom: 20rpx;
+  border-radius: 10rpx;
+  .item {
+    line-height: 90rpx;
+    padding-left: 10rpx;
+    font-size: 30rpx;
+    color: #3d3d3d;
+    border-top: 1rpx solid #ddd;
+    position: relative;
+    text-align: left;
+    border-radius: 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &::after {
+      width: auto;
+      height: auto;
+      left: auto;
+      border: none;
+    }
+    &:first-child {
+      border: none;
+    }
+    &::after {
+      right: 5rpx;
+    }
+    .icon-text {
+      display: flex;
+      align-items: center;
+      .icons {
+        font-size: 34rpx;
+        margin-right: 20rpx;
+        color: $ashome-color-base;
+        font-weight: bold;
+      }
+    }
+  }
+}
 
+.loginphone {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20rpx;
+  background-color: #fdf4ed;
+  height: 70rpx;
+  .left-text {
+    display: flex;
+    align-items: center;
+    .tip {
+      font-size: 40rpx;
+      color: red;
+    }
+    text {
+      margin-left: 10rpx;
+      font-size: 24rpx;
+      color: #d3a557;
+    }
+  }
+  .bind-phone {
+    display: flex;
+    align-items: center;
+    .btn {
+      background-color: #fe9e14;
+      font-size: 24rpx;
+      color: #fff;
+      font-weight: bold;
+    }
   }
 }
 

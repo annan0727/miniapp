@@ -34,7 +34,7 @@ const httpInterceptor = {
     const token = memberStore.profile?.token // 获取用户token
     if (token) {
       // 设置请求头 token
-      options.header.Authorization = "Bearer " + token
+      options.header.Authorization = 'Bearer ' + token
     }
   },
 }
@@ -78,20 +78,20 @@ export const http = <T>(options: UniApp.RequestOptions) => {
         if (res.statusCode >= 200 && res.statusCode < 404) {
           const code = (res.data as ResponseData<T>).code
           // 2.1 提取核心数据 res.data
-          if (code === "200") {
+          if (code === '200') {
             resolve(res.data as ResponseData<T>)
-          } else if (code === "400") {
+          } else if (code === '400') {
             // 400错误 常规业务提醒，如文件过大，字符长度过大等
             uni.showToast({
               icon: 'none',
               title: (res.data as ResponseData<T>).msg || '请求错误',
             })
             reject(res)
-          } else if (code === "401") {
+          } else if (code === '401') {
             // 401错误 用户token失效 清理用户信息 重新自动登录
             const memberStore = useMemberStore()
             memberStore.clearProfile()
-            await autoLogin();
+            await autoLogin()
             uni.showToast({
               icon: 'none',
               title: '网络卡顿，请重试！',
@@ -105,11 +105,10 @@ export const http = <T>(options: UniApp.RequestOptions) => {
             })
             reject(res)
           }
-
         } else if (res.statusCode === 404) {
           uni.showToast({
             icon: 'none',
-            title: '糟糕！页面找不到了~'
+            title: '糟糕！页面找不到了~',
           })
           uni.reLaunch({ url: '/pages/index/index' })
           reject(res)
