@@ -97,7 +97,7 @@ onLoad(async () => {
         <text class="tip icon-a-44tubiao-62"></text>
         <text> 绑定手机号，同步自己的个人纪录哦！ </text>
       </view>
-      <navigator url="/pagesMember/bindPhone" class="bind-phone" hover-class="none">
+      <navigator url="/pages/login/register" class="bind-phone" hover-class="none">
         <button hover-class="button-hover" size="mini" class="btn">登录/注册</button>
       </navigator>
     </view>
@@ -200,7 +200,6 @@ page {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    line-height: 30rpx;
     padding: 16rpx 0;
     margin-left: 20rpx;
   }
@@ -208,7 +207,7 @@ page {
   .nickname {
     max-width: 350rpx;
     margin-bottom: 16rpx;
-    font-size: 30rpx;
+    font-size: 36rpx;
     font-weight: bold;
 
     overflow: hidden;
@@ -217,7 +216,7 @@ page {
   }
 
   .tips {
-    font-size: 30rpx;
+    font-size: 32rpx;
   }
 
   .company {
@@ -231,7 +230,6 @@ page {
     bottom: 0rpx;
     right: 40rpx;
     color: #3d3d3d;
-    font-weight: bold;
   }
 }
 

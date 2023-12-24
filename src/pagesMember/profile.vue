@@ -35,8 +35,39 @@ const queryUserInfo = async () => {
 }
 
 // 选择头像
-const onChooseAvatar: UniHelper.ButtonOnChooseavatar = (e) => {
-  profileInfo.value.picPath = e.detail?.avatarUrl
+const onChooseAvatar = (e: UniHelper.ButtonOnChooseavatarEvent) => {
+  uni.getImageInfo({
+    src: e.detail?.avatarUrl,
+    success: (success) => {
+      // 上传
+      uploadFile(success.path)
+    },
+  })
+  // profileInfo.value.picPath = e.detail?.avatarUrl
+}
+
+// 文件上传-兼容小程序端、H5端、App端
+const uploadFile = (file: string) => {
+  // 文件上传
+  uni.uploadFile({
+    url: '/api/v1/file/upload',
+    name: 'file',
+    filePath: file,
+    success: (res) => {
+      if (res.statusCode === 200) {
+        console.log('res.data', res.data)
+
+        const avatar = JSON.parse(res.data).data?.url
+        // 个人信息页数据更新
+        profileInfo.value!.picPath = avatar
+        // Store头像更新
+        memberStore.profile!.picPath = avatar
+        uni.showToast({ icon: 'success', title: '更新成功' })
+      } else {
+        uni.showToast({ icon: 'error', title: '出现错误' })
+      }
+    },
+  })
 }
 
 // 日期选择
