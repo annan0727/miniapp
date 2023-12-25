@@ -8,7 +8,7 @@ import type { ProfileInfo, UpdateUserParams } from '@/types/member'
 export const getUserInfo = () => {
   return http<ProfileInfo>({
     method: 'GET',
-    url: '/api/v1/wx/user/userInfo'
+    url: '/api/v1/ashome/wx/user/userInfo'
   })
 }
 
@@ -28,7 +28,7 @@ export const getUserInfo = () => {
 export const updateUser = (params: UpdateUserParams) => {
   return http<Boolean>({
     method: 'POST',
-    url: '/api/v1/wx/user/updateUser',
+    url: '/api/v1/ashome/wx/user/updateUser',
     data: params
   })
 }

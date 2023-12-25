@@ -9,6 +9,6 @@ import type { ProfileInfo } from '@/types/member'
 export const userLogin = (code: string) => {
   return http<ProfileInfo>({
     method: 'GET',
-    url: `/api/v1/wx/user/silentLogin?code=${code}`
+    url: `/api/v1/ashome/wx/user/silentLogin?code=${code}`
   })
 }
