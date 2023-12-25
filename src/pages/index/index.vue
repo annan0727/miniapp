@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import AddButton from '@/components/AddButton.vue'
+const title = ref('强友之家')
+</script>
+
 <template>
   <view class="content">
     <!-- <image class="logo" src="/static/logo.png" /> -->
@@ -5,12 +11,8 @@
       <text class="title">{{ title }}</text>
     </view>
   </view>
+  <AddButton></AddButton>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-const title = ref('强友之家')
-</script>
 
 <style>
 .content {

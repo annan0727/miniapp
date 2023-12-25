@@ -92,6 +92,17 @@
 					}
 				}
 			]
+		},
+		{
+			"root": "pagesArticle",
+			"pages": [
+				{
+					"path": "exchangeArticle",
+					"style": {
+						"navigationBarTitleText": "交流一下"
+					}
+				}
+			]
 		}
 	]
 }
